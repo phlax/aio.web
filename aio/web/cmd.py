@@ -24,11 +24,13 @@ def cmd_web(argv):
     except (SystemExit, IndexError):
         parser.print_help()
         loop.stop()
+        loop.close()
         return
     except:
         import traceback
         traceback.print_exc()
         loop.stop()
+        loop.close()
         return
 
     if parsed.command == 'collectstatic':

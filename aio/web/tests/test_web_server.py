@@ -33,17 +33,20 @@ class WebServerTestCase(AioAppTestCase):
 
         return _test
 
-    @aiotest
+    @aiofuturetest
     def test_web_root(self):
         yield from runner(
             ['run'],
             configfile=os.path.join(
                 TEST_DIR,
                 "resources", "test-1.conf"))
-        app = aiohttp.web.Application()     
-        app['name'] = 'foo'
+        app = aiohttp.web.Application()
+        app['name'] = 'test'
+
         web = yield from aio.web.root(app)
         
+        @asyncio.coroutine
+        def _test():
+            self.assertTrue(True)
 
-
-
+        return _test
