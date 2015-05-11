@@ -30,7 +30,7 @@ We can define routes in a corresponding [web:{name}] section when using aio.web.
   ... [web:test]
   ... routes: GET / aio.web.tests.handle_hello_web_world
   ... """
-
+  
 Running
 -------
 
@@ -74,7 +74,27 @@ And run the test
   >>> response.body
   b'Hello, web world'
 
+Accessing web apps
+------------------
 
+You can access a webapp by name
+
+  >>> import aio.web
+  >>> aio.web.apps['test']
+  <Application>
+
+  >>> aio.web.apps['test']['name']
+  'test'
+
+And you can clear the web apps
+
+  >>> aio.web.clear()
+  >>> aio.web.apps
+  {}
+
+  >>> import aio.app  
+  >>> aio.app.clear()  
+  
 Static directory
 ----------------
 
@@ -117,8 +137,8 @@ Static directory
    
   >>> import shutil
   >>> shutil.rmtree("/tmp/test_static")
-  >>> import aio.app
-  >>> aio.app.clear()
+  >>> aio.web.clear()
+  >>> aio.app.clear()  
 
 Templates
 ---------
@@ -160,6 +180,8 @@ And use that to get the associated templates
   >>> aiohttp_jinja2.get_env(webapp).list_templates()
   ['test_template.html']
 
+  >>> aio.web.clear()
+  >>> aio.app.clear()
 
 Aio web command
 ---------------

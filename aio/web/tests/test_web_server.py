@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 
 from aio.testing import aiotest, aiofuturetest
-from aio.app.testing import AioAppTestCase
+from aio.web.testing import AioWebAppTestCase
 from aio.signals import Signals
 import aio.app
 import aio.web
@@ -26,9 +26,9 @@ routes: GET / aio.web.tests.handle_hello_web_world
 """
 
 
-class WebServerTestCase(AioAppTestCase):
+class WebServerTestCase(AioWebAppTestCase):
 
-    @aiofuturetest
+    @aiofuturetest(sleep=2)
     def test_web_server(self):
         yield from runner(
             ['run'], config_string=CONFIG)
@@ -39,7 +39,7 @@ class WebServerTestCase(AioAppTestCase):
 
         return _test
 
-    @aiofuturetest
+    @aiofuturetest(sleep=2)
     def test_web_root(self):
         yield from runner(
             ['run'], config_string=CONFIG)

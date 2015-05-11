@@ -44,7 +44,7 @@ def root(app):
     yield from setup_static(app)
 
     app_config = "web:%s" % app['name']
-    
+
     try:
         conf = aio.app.config[app_config]
     except KeyError:
@@ -90,3 +90,8 @@ def root(app):
     aio.app.signals.listen('sockets-info', cb_sockets_info)
     aio.app.signals.listen('sockets-error', cb_sockets_error)
     aio.app.signals.listen('sockets-emit', cb_sockets_emit)
+
+
+def clear():
+    import aio.web
+    aio.web.apps = {}
