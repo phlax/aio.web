@@ -15,7 +15,9 @@ if sys.version_info < (3, 4):
         'asyncio',
         'aio.core',
         'aio.app',
-        'aio.http']
+        'aio.http',
+        'aiohttp',
+        'aiohttp_jinja2']
 
 tests_require = install_requires + ['aio.testing']
 
