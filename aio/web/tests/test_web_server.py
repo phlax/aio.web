@@ -22,13 +22,8 @@ port: 7070
 
 [web:test]
 sockets: False
-routes: GET / aio.web.tests.test_web_server.handle_http
+routes: GET / aio.web.tests.handle_hello_web_world
 """
-
-
-@asyncio.coroutine
-def handle_http(request):
-    return aiohttp.web.Response(body=b"Hello, world")    
 
 
 class WebServerTestCase(AioAppTestCase):

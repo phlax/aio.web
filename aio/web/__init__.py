@@ -15,6 +15,7 @@ import aio.app
 import logging
 log = logging.getLogger("aio.web")
 
+apps = {}
 
 @asyncio.coroutine
 def setup_static(app):
@@ -38,6 +39,7 @@ def setup_templates(app):
 
 @asyncio.coroutine
 def root(app):
+    apps[app['name']] = app
     yield from setup_templates(app)
     yield from setup_static(app)
 
@@ -60,7 +62,7 @@ def root(app):
             conf['static_url'],
             os.path.abspath(conf['static_dir']))
 
-    if not conf['sockets']:
+    if not conf.get('sockets'):
         return
 
     app['sockets'] = []
