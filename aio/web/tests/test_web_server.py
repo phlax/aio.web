@@ -11,6 +11,9 @@ import aio.web
 from aio.app.runner import runner
 
 CONFIG = """
+[aio:commands]
+run: aio.app.cmd.cmd_run
+
 [server:test]
 factory: aio.http.server.http_server
 root: aio.web.root
