@@ -10,7 +10,18 @@ import aio.app
 import aio.web
 from aio.app.runner import runner
 
-TEST_DIR = os.path.dirname(__file__)
+CONFIG = """
+[server:test]
+factory: aio.http.server.http_server
+root: aio.web.root
+address: 0.0.0.0
+port: 7070
+
+[web:test]
+sockets: False
+routes: GET / aio.web.tests.test_web_server.handle_http
+"""
+
 
 @asyncio.coroutine
 def handle_http(request):
@@ -22,10 +33,7 @@ class WebServerTestCase(AioAppTestCase):
     @aiofuturetest
     def test_web_server(self):
         yield from runner(
-            ['run'],
-            configfile=os.path.join(
-                TEST_DIR,
-                "resources", "test-1.conf"))
+            ['run'], config_string=CONFIG)
 
         @asyncio.coroutine
         def _test():
@@ -36,13 +44,9 @@ class WebServerTestCase(AioAppTestCase):
     @aiofuturetest
     def test_web_root(self):
         yield from runner(
-            ['run'],
-            configfile=os.path.join(
-                TEST_DIR,
-                "resources", "test-1.conf"))
+            ['run'], config_string=CONFIG)
         app = aiohttp.web.Application()
         app['name'] = 'test'
-
         web = yield from aio.web.root(app)
         
         @asyncio.coroutine
