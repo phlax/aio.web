@@ -6,9 +6,6 @@ import asyncio
 
 from zope.dottedname.resolve import resolve
 
-import aiohttp_jinja2
-import jinja2
-
 from aio.core.exceptions import MissingConfiguration
 import aio.app
 
@@ -29,6 +26,9 @@ def setup_static(app):
 
 @asyncio.coroutine
 def setup_templates(app):
+    import aiohttp_jinja2
+    import jinja2
+
     templates = []
     for module in aio.app.modules:
         templates.append(os.path.join(module.__path__[0], "templates"))
