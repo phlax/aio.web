@@ -37,7 +37,7 @@ setup(
     packages=find_packages(),
     namespace_packages=['aio'],
     include_package_data=True,
-    package_data={'': ['README.rst']},    
+    package_data={'': ['README.rst', "*.html"]},
     zip_safe=False,
     tests_require=tests_require,
     install_requires=install_requires,
