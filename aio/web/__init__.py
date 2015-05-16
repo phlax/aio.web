@@ -32,8 +32,6 @@ def setup_templates(app):
     templates = []
     for module in aio.app.modules:
         templates.append(os.path.join(module.__path__[0], "templates"))
-    if templates:
-        print(os.listdir(templates[0]))
     aiohttp_jinja2.setup(
         app,
         loader=jinja2.FileSystemLoader(templates))
