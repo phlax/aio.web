@@ -1,14 +1,8 @@
-=======
-aio.web
-=======
+aio.web usage
+-------------
 
+Usage examples for [aio.web](../..) web server
 
-Installation
-------------
-
-Install with:
-
-  pip install aio.web
 
 Configuration
 -------------
@@ -31,15 +25,6 @@ We can define routes in a corresponding [web:{name}] section when using aio.web.
   ... routes: GET / aio.web.tests.handle_hello_web_world
   ... """
   
-Running
--------
-
-Run with the aio command
-
-  # aio run
-
-
-See http://github.com/phlax/aio.app for more information on the "aio run" command
   
 Running the app
 ---------------
