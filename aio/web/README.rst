@@ -1,8 +1,6 @@
 aio.web usage
 -------------
 
-Usage examples for [aio.web](../..) web server
-
 
 Configuration
 -------------
