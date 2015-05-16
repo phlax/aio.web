@@ -8,16 +8,16 @@ from aio.web import __version__ as version
 
 
 install_requires = [
-    'setuptools']
+    'setuptools',
+    'aio.core',
+    'aio.app',
+    'aio.http',
+    'aiohttp',
+    'aiohttp_jinja2']
 
 if sys.version_info < (3, 4):
     install_requires += [
-        'asyncio',
-        'aio.core',
-        'aio.app',
-        'aio.http',
-        'aiohttp',
-        'aiohttp_jinja2']
+        'asyncio']
 
 tests_require = install_requires + ['aio.testing']
 
