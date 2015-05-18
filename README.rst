@@ -46,6 +46,10 @@ And the corresponding handler
 
 .. code:: python
 
+	  import asyncio
+	  import aiohttp
+
+	  @asyncio.coroutine
 	  def hello_world_handler(request):
 	      return aiohttp.web.Response(body=b"Hello, web world")
 
@@ -58,3 +62,4 @@ Run with the aio command
 .. code:: bash
 
 	  aio run
+

@@ -65,19 +65,21 @@ You can access a webapp by name
   >>> aio.web.apps['test']['name']
   'test'
 
-And you can clear the web apps
+Let's clear the web apps
 
   >>> aio.web.clear()
   >>> aio.web.apps
   {}
 
   >>> import aio.app  
-  >>> aio.app.clear()  
+  >>> aio.app.clear()
+  >>> del aio.web.tests._test_hello_world_handler  
+  
   
 Static directory
 ----------------
 
-  >>> CONFIG = """
+  >>> config_static = """
   ... [aio:commands]
   ... run: aio.app.cmd.cmd_run
   ... 
@@ -98,7 +100,7 @@ Static directory
   ...    res = cssfile.write("body {}")
   
   >>> def run_future_app():
-  ...     yield from runner(['run'], config_string=CONFIG)
+  ...     yield from runner(['run'], config_string=config_static)
   ... 
   ...     @asyncio.coroutine
   ...     def _test_web():
@@ -116,14 +118,24 @@ Static directory
   >>> import shutil
   >>> shutil.rmtree("/tmp/test_static")
   >>> aio.web.clear()
-  >>> aio.app.clear()  
+  >>> aio.app.clear()
+  
 
 Templates
 ---------
 
 Templates are found by searching the the __path__s of aio.app.modules folders named "templates"
 
-  >>> CONFIG = """
+  >>> import aiohttp_jinja2
+
+  >>> def template_handler(request):
+  ...     return {
+  ...         'message': 'Hello, world'}
+
+  >>> aio.web.tests._test_template_handler = (
+  ...     aiohttp_jinja2.template('test_template.html')(template_handler))
+
+  >>> config_template = """
   ... [aio]
   ... modules = aio.web.tests
   ... 
@@ -134,13 +146,26 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
   ... factory: aio.http.server
   ... protocol: aio.web.protocol_factory
   ... port: 7070
+  ... 
+  ... [web:test]
+  ... routes: GET / aio.web.tests._test_template_handler
   ... """
 
   >>> def run_future_app():
-  ...     yield from runner(['run'], config_string=CONFIG)
-
+  ...     yield from runner(['run'], config_string=config_template)
+  ... 
+  ...     @asyncio.coroutine
+  ...     def _test_web():
+  ...         result = yield from (
+  ...             yield from aiohttp.request(
+  ...                "GET", "http://localhost:7070/")).read()
+  ... 
+  ...         print(result)
+  ... 
+  ...     return _test_web
+  
   >>> aiofuturetest(run_future_app, timeout=1, sleep=1)()
-
+  b'<html>\n  <body>\n    Hello, world\n  </body>\n</html>'
 
 We can get the associated templates for the web app
 
@@ -152,4 +177,5 @@ We can get the associated templates for the web app
 
   >>> aio.web.clear()
   >>> aio.app.clear()
+  >>> del aio.web.tests._test_template_handler
 
