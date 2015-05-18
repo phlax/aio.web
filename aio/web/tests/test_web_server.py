@@ -15,8 +15,8 @@ CONFIG = """
 run: aio.app.cmd.cmd_run
 
 [server:test]
-factory: aio.http.server.http_server
-root: aio.web.root
+factory: aio.http.server
+protocol: aio.web.protocol_factory
 address: 0.0.0.0
 port: 7070
 
@@ -43,12 +43,3 @@ class WebServerTestCase(AioWebAppTestCase):
     def test_web_root(self):
         yield from runner(
             ['run'], config_string=CONFIG)
-        app = aiohttp.web.Application()
-        app['name'] = 'test'
-        web = yield from aio.web.root(app)
-        
-        @asyncio.coroutine
-        def _test():
-            self.assertTrue(True)
-
-        return _test

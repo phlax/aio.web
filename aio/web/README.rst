@@ -5,48 +5,44 @@ aio.web usage
 Configuration
 -------------
 
-Create a config defining a factory method and a root handler
+Let's create a config defining a factory method and using the aio.web.protocol_factory for the protocol
 
-We can define routes in a corresponding [web:{name}] section when using aio.web.root
+We can define routes for the web server in a corresponding [web:{name}] section
 
-  >>> CONFIG = """
+  >>> import asyncio
+  >>> import aiohttp
+  
+  >>> def hello_world_handler(request):
+  ...     return aiohttp.web.Response(body=b"Hello, web world")    
+
+  >>> import aio.web
+  >>> aio.web.tests._test_hello_world_handler = asyncio.coroutine(hello_world_handler)
+  
+  >>> config = """
   ... [aio:commands]
   ... run: aio.app.cmd.cmd_run
   ... 
   ... [server:test]
-  ... factory: aio.http.server.http_server
-  ... root: aio.web.root
-  ... address: 0.0.0.0
+  ... factory: aio.http.server
+  ... protocol: aio.web.protocol_factory
   ... port: 7070
   ... 
   ... [web:test]
-  ... routes: GET / aio.web.tests.handle_hello_web_world
-  ... """
-  
-  
-Running the app
----------------
+  ... routes: GET / aio.web.tests._test_hello_world_handler
+  ... """  
 
-And define an object to collect the results
-
-  >>> class Response:
-  ...     body = None
-  >>> response = Response()
-
-Lets run an async test to get the default http response
-
-  >>> import asyncio
-  >>> import aiohttp
   >>> from aio.app.runner import runner  
 
   >>> def run_future_app():
-  ...     yield from runner(['run'], config_string=CONFIG)
+  ...     yield from runner(['run'], config_string=config)
   ... 
   ...     @asyncio.coroutine
   ...     def _test_http():
-  ...         response.body = yield from (
+  ...         result = yield from (
   ...             yield from aiohttp.request(
   ...                "GET", "http://localhost:7070")).read()
+  ... 
+  ...         print(result)
   ... 
   ...     return _test_http
 
@@ -54,9 +50,9 @@ And run the test
 
   >>> from aio.testing import aiofuturetest
   >>> aiofuturetest(run_future_app, timeout=5, sleep=2)()  
-  >>> response.body
   b'Hello, web world'
 
+  
 Accessing web apps
 ------------------
 
@@ -86,13 +82,11 @@ Static directory
   ... run: aio.app.cmd.cmd_run
   ... 
   ... [server:test]
-  ... factory: aio.http.server.http_server
-  ... root: aio.web.root
-  ... address: 0.0.0.0
+  ... factory: aio.http.server
+  ... protocol: aio.web.protocol_factory
   ... port: 7070
   ... 
   ... [web:test]
-  ... routes: GET / aio.web.tests.handle_hello_web_world
   ... static_url: /static
   ... static_dir: /tmp/test_static/  
   ... """
@@ -108,14 +102,15 @@ Static directory
   ... 
   ...     @asyncio.coroutine
   ...     def _test_web():
-  ...         response.body = yield from (
+  ...         result = yield from (
   ...             yield from aiohttp.request(
   ...                "GET", "http://localhost:7070/static/test.css")).read()
+  ... 
+  ...         print(result)
   ... 
   ...     return _test_web
   
   >>> aiofuturetest(run_future_app, timeout=5, sleep=2)()  
-  >>> response.body
   b'body {}'
    
   >>> import shutil
@@ -136,13 +131,9 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
   ... run: aio.app.cmd.cmd_run
   ... 
   ... [server:test]
-  ... factory: aio.http.server.http_server
-  ... root: aio.web.root
-  ... address: 0.0.0.0
+  ... factory: aio.http.server
+  ... protocol: aio.web.protocol_factory
   ... port: 7070
-  ... 
-  ... [web:test]
-  ... routes: GET / aio.web.tests.handle_hello_web_world
   ... """
 
   >>> def run_future_app():
@@ -150,14 +141,10 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
 
   >>> aiofuturetest(run_future_app, timeout=5, sleep=2)()
 
-We can get the web app by name from the aio.web.apps var
 
-  >>> import aio.web
+We can get the associated templates for the web app
+
   >>> webapp = aio.web.apps['test']
-  >>> webapp
-  <Application>
-
-And use that to get the associated templates
 
   >>> import aiohttp_jinja2
   >>> aiohttp_jinja2.get_env(webapp).list_templates()
@@ -166,17 +153,3 @@ And use that to get the associated templates
   >>> aio.web.clear()
   >>> aio.app.clear()
 
-Aio web command
----------------
-
-  >>> CONFIG = """
-  ... [aio]
-  ... modules = aio.web.tests
-  ... 
-  ... [aio:commands]
-  ... web: aio.web.cmd.cmd_web
-  ... """
-  
-With the above configuration you can run to collect static resources from listed modules
-
-  # aio web static
