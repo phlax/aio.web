@@ -49,7 +49,7 @@ We can define routes for the web server in a corresponding [web:{name}] section
 And run the test
 
   >>> from aio.testing import aiofuturetest
-  >>> aiofuturetest(run_future_app, timeout=5, sleep=2)()  
+  >>> aiofuturetest(run_future_app, timeout=1, sleep=1)()  
   b'Hello, web world'
 
   
@@ -110,7 +110,7 @@ Static directory
   ... 
   ...     return _test_web
   
-  >>> aiofuturetest(run_future_app, timeout=5, sleep=2)()  
+  >>> aiofuturetest(run_future_app, timeout=1, sleep=1)()  
   b'body {}'
    
   >>> import shutil
@@ -139,7 +139,7 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
   >>> def run_future_app():
   ...     yield from runner(['run'], config_string=CONFIG)
 
-  >>> aiofuturetest(run_future_app, timeout=5, sleep=2)()
+  >>> aiofuturetest(run_future_app, timeout=1, sleep=1)()
 
 
 We can get the associated templates for the web app
