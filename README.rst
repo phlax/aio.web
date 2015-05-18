@@ -39,7 +39,7 @@ Example configuration for a hello world web page
 	  port = 8080
 
 	  [web:test]
-	  routes: GET / my.example.handler
+	  routes = GET / my.example.handler
 
 
 And the corresponding handler

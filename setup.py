@@ -5,7 +5,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-version = "0.0.1"
+version = "0.0.2"
 
 install_requires = [
     'setuptools',
@@ -34,7 +34,7 @@ long_description = (
 try:
     long_description += (
         '\n'
-        + read("aio", "http", "README.rst")
+        + read("aio", "web", "README.rst")
         + '\n')    
 except FileNotFoundError:
     pass
