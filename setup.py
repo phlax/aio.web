@@ -5,7 +5,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-version = "0.0.2"
+version = "0.0.3"
 
 install_requires = [
     'setuptools',
@@ -59,7 +59,7 @@ setup(
     packages=find_packages(),
     namespace_packages=['aio'],
     include_package_data=True,
-    package_data={'': ['templates/*.html', 'README.rst']},
+    package_data={'': ['templates/*.html', '*.rst']},
     test_suite="aio.app.tests",    
     zip_safe=False,
     tests_require=tests_require,

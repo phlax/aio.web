@@ -28,7 +28,7 @@ routes: GET / aio.web.tests.handle_hello_web_world
 
 class WebServerTestCase(AioWebAppTestCase):
 
-    @aiofuturetest(sleep=2)
+    @aiofuturetest(timeout=1, sleep=1)
     def test_web_server(self):
         yield from runner(
             ['run'], config_string=CONFIG)
@@ -39,7 +39,7 @@ class WebServerTestCase(AioWebAppTestCase):
 
         return _test
 
-    @aiofuturetest(sleep=2)
+    @aiofuturetest(timeout=1, sleep=2)
     def test_web_root(self):
         yield from runner(
             ['run'], config_string=CONFIG)

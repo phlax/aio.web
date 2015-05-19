@@ -160,12 +160,17 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
   ...             yield from aiohttp.request(
   ...                "GET", "http://localhost:7070/")).read()
   ... 
-  ...         print(result)
+  ...         print(result.decode())
   ... 
   ...     return _test_web
   
   >>> aiofuturetest(run_future_app, timeout=1, sleep=1)()
-  b'<html>\n  <body>\n    Hello, world\n  </body>\n</html>'
+  <html>
+    <body>
+      Hello, world
+    </body>
+  </html>
+	
 
 We can get the associated templates for the web app
 
