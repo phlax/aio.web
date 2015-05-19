@@ -37,7 +37,7 @@ def setup_templates(webapp):
 
 
 @asyncio.coroutine
-def protocol_factory(name):
+def protocol(name):
     import aio.web
 
     protocol = yield from aio.http.protocol_factory(name)

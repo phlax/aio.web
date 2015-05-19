@@ -32,7 +32,7 @@ Example configuration for a hello world web page
 
 	  [server:test]
 	  factory = aio.http.server
-	  protocol = aio.web.protocol_factory
+	  protocol = aio.web.protocol
 	  port = 8080
 
 	  [web:test]
@@ -47,7 +47,7 @@ And the corresponding handler
 	  import aiohttp
 
 	  @asyncio.coroutine
-	  def hello_world_handler(request):
+	  def handler(request):
 	      return aiohttp.web.Response(body=b"Hello, web world")
 
 

@@ -5,7 +5,7 @@ aio.web usage
 Configuration
 -------------
 
-Let's create a config defining a factory method and using the aio.web.protocol_factory for the protocol
+Let's create a config defining a factory method and using the aio.web.protocol for the protocol
 
 We can define routes for the web server in a corresponding [web:{name}] section
 
@@ -15,7 +15,7 @@ We can define routes for the web server in a corresponding [web:{name}] section
   ... 
   ... [server:test]
   ... factory: aio.http.server
-  ... protocol: aio.web.protocol_factory
+  ... protocol: aio.web.protocol
   ... port: 7070
   ... 
   ... [web:test]
@@ -83,7 +83,7 @@ The web: section takes a static_url and a static_dir option for hosting static f
   ... 
   ... [server:test]
   ... factory: aio.http.server
-  ... protocol: aio.web.protocol_factory
+  ... protocol: aio.web.protocol
   ... port: 7070
   ... 
   ... [web:test]
@@ -123,7 +123,7 @@ Add any modules containing templates to the [aio] modules option
   ... 
   ... [server:test]
   ... factory: aio.http.server
-  ... protocol: aio.web.protocol_factory
+  ... protocol: aio.web.protocol
   ... port: 7070
   ... 
   ... [web:test]
