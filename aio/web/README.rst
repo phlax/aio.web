@@ -9,16 +9,7 @@ Let's create a config defining a factory method and using the aio.web.protocol_f
 
 We can define routes for the web server in a corresponding [web:{name}] section
 
-  >>> import asyncio
-  >>> import aiohttp
-  
-  >>> def hello_world_handler(request):
-  ...     return aiohttp.web.Response(body=b"Hello, web world")    
-
-  >>> import aio.web
-  >>> aio.web.tests._test_hello_world_handler = asyncio.coroutine(hello_world_handler)
-  
-  >>> config = """
+  >>> web_server_config = """
   ... [aio]
   ... log_level: ERROR
   ... 
@@ -28,29 +19,35 @@ We can define routes for the web server in a corresponding [web:{name}] section
   ... port: 7070
   ... 
   ... [web:test]
-  ... routes: GET / aio.web.tests._test_hello_world_handler
+  ... routes: GET / aio.web.tests._example_handler
   ... """  
 
-  >>> from aio.app.runner import runner  
+  >>> import asyncio
+  >>> import aiohttp
+  >>> import aio.web.tests
+  >>> from aio.app.runner import runner    
+  >>> from aio.testing import aiofuturetest
 
-  >>> def run_future_app():
+  >>> def handler(request):
+  ...     return aiohttp.web.Response(body=b"Hello, web world")    
+
+  >>> aio.web.tests._example_handler = asyncio.coroutine(handler)
+  
+  >>> def run_web_server(config, request_page="http://localhost:7070"):
   ...     yield from runner(['run'], config_string=config)
   ... 
   ...     @asyncio.coroutine
-  ...     def _test_http():
+  ...     def call_web_server():
   ...         result = yield from (
   ...             yield from aiohttp.request(
-  ...                "GET", "http://localhost:7070")).read()
+  ...                "GET", request_page)).read()
   ... 
-  ...         print(result)
+  ...         print(result.decode())
   ... 
-  ...     return _test_http
+  ...     return call_web_server
 
-And run the test
-
-  >>> from aio.testing import aiofuturetest
-  >>> aiofuturetest(run_future_app, sleep=1)()  
-  b'Hello, web world'
+  >>> aiofuturetest(run_web_server, sleep=1)(web_server_config)  
+  Hello, web world
 
   
 Accessing web apps
@@ -73,11 +70,12 @@ Let's clear the web apps
 
   >>> import aio.app  
   >>> aio.app.clear()
-  >>> del aio.web.tests._test_hello_world_handler  
   
   
 Static directory
 ----------------
+
+The web: section takes a static_url and a static_dir option for hosting static files
 
   >>> config_static = """
   ... [aio]
@@ -99,22 +97,12 @@ Static directory
   >>> with open("/tmp/test_static/test.css", 'w') as cssfile:
   ...    res = cssfile.write("body {}")
   
-  >>> def run_future_app():
-  ...     yield from runner(['run'], config_string=config_static)
-  ... 
-  ...     @asyncio.coroutine
-  ...     def _test_web():
-  ...         result = yield from (
-  ...             yield from aiohttp.request(
-  ...                "GET", "http://localhost:7070/static/test.css")).read()
-  ... 
-  ...         print(result)
-  ... 
-  ...     return _test_web
-  
-  >>> aiofuturetest(run_future_app, sleep=1)()  
-  b'body {}'
-   
+  >>> aiofuturetest(run_web_server, sleep=1)(
+  ...     config_static,"http://localhost:7070/static/test.css")  
+  body {}
+
+And clear up...
+
   >>> import shutil
   >>> shutil.rmtree("/tmp/test_static")
   >>> aio.web.clear()
@@ -124,16 +112,9 @@ Static directory
 Templates
 ---------
 
-Templates are found by searching the the __path__s of aio.app.modules folders named "templates"
+aio.web uses jinja2 templates
 
-  >>> import aiohttp_jinja2
-
-  >>> def template_handler(request):
-  ...     return {
-  ...         'message': 'Hello, world'}
-
-  >>> aio.web.tests._test_template_handler = (
-  ...     aiohttp_jinja2.template('test_template.html')(template_handler))
+Add any modules containing templates to the [aio] modules option
 
   >>> config_template = """
   ... [aio]
@@ -146,30 +127,25 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
   ... port: 7070
   ... 
   ... [web:test]
-  ... routes: GET / aio.web.tests._test_template_handler
+  ... routes: GET / aio.web.tests._example_template_handler
   ... """
 
-  >>> def run_future_app():
-  ...     yield from runner(['run'], config_string=config_template)
-  ... 
-  ...     @asyncio.coroutine
-  ...     def _test_web():
-  ...         result = yield from (
-  ...             yield from aiohttp.request(
-  ...                "GET", "http://localhost:7070/")).read()
-  ... 
-  ...         print(result.decode())
-  ... 
-  ...     return _test_web
+  >>> import aiohttp_jinja2
+
+  >>> def template_handler(request):
+  ...     return {
+  ...         'message': 'Hello, world'}
+
+  >>> aio.web.tests._example_template_handler = (
+  ...     aiohttp_jinja2.template('test_template.html')(template_handler))
   
-  >>> aiofuturetest(run_future_app, sleep=1)()
+  >>> aiofuturetest(run_web_server, sleep=1)(config_template)
   <html>
     <body>
       Hello, world
     </body>
   </html>
 	
-
 We can get the associated templates for the web app
 
   >>> webapp = aio.web.apps['test']
@@ -179,6 +155,3 @@ We can get the associated templates for the web app
   ['test_template.html']
 
   >>> aio.web.clear()
-  >>> aio.app.clear()
-  >>> del aio.web.tests._test_template_handler
-
