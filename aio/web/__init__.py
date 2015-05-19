@@ -4,7 +4,6 @@ import asyncio
 
 from zope.dottedname.resolve import resolve
 
-from aio.core.exceptions import MissingConfiguration
 import aio.app
 import aio.http
 
@@ -12,6 +11,7 @@ import logging
 log = logging.getLogger("aio.web")
 
 apps = {}
+
 
 @asyncio.coroutine
 def setup_static(webapp):
@@ -39,7 +39,7 @@ def setup_templates(webapp):
 @asyncio.coroutine
 def protocol_factory(name):
     import aio.web
-    
+
     protocol = yield from aio.http.protocol_factory(name)
     webapp = protocol._app
     aio.web.apps[name] = webapp
@@ -53,7 +53,7 @@ def protocol_factory(name):
     except KeyError:
         return protocol
 
-    routes =  conf.get('routes', None)
+    routes = conf.get('routes', None)
     if routes:
         for route in [r.strip() for r in routes.split("\n")]:
             parts = route.split(' ')
@@ -96,6 +96,7 @@ def protocol_factory(name):
     aio.app.signals.listen('sockets-emit', cb_sockets_emit)
 
     return protocol
+
 
 def clear():
     import aio.web

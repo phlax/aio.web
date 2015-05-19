@@ -19,8 +19,8 @@ We can define routes for the web server in a corresponding [web:{name}] section
   >>> aio.web.tests._test_hello_world_handler = asyncio.coroutine(hello_world_handler)
   
   >>> config = """
-  ... [aio:commands]
-  ... run: aio.app.cmd.cmd_run
+  ... [aio]
+  ... log_level: ERROR
   ... 
   ... [server:test]
   ... factory: aio.http.server
@@ -80,8 +80,8 @@ Static directory
 ----------------
 
   >>> config_static = """
-  ... [aio:commands]
-  ... run: aio.app.cmd.cmd_run
+  ... [aio]
+  ... log_level: ERROR
   ... 
   ... [server:test]
   ... factory: aio.http.server
@@ -138,9 +138,7 @@ Templates are found by searching the the __path__s of aio.app.modules folders na
   >>> config_template = """
   ... [aio]
   ... modules = aio.web.tests
-  ... 
-  ... [aio:commands]
-  ... run: aio.app.cmd.cmd_run
+  ... log_level: ERROR
   ... 
   ... [server:test]
   ... factory: aio.http.server

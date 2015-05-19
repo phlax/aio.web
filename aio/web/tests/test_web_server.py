@@ -1,13 +1,7 @@
-import os
 import asyncio
 
-import aiohttp
-
-from aio.testing import aiotest, aiofuturetest
+from aio.testing import aiofuturetest
 from aio.web.testing import AioWebAppTestCase
-from aio.signals import Signals
-import aio.app
-import aio.web
 from aio.app.runner import runner
 
 CONFIG = """

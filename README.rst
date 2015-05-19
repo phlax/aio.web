@@ -30,9 +30,6 @@ Example configuration for a hello world web page
 
 .. code:: ini
 
-	  [aio:commands]
-	  run = aio.app.cmd.cmd_run
-
 	  [server:test]
 	  factory = aio.http.server
 	  protocol = aio.web.protocol_factory
