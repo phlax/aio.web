@@ -30,12 +30,12 @@ Example configuration for a hello world web page
 
 .. code:: ini
 
-	  [server:test]
+	  [server/test]
 	  factory = aio.http.server
 	  protocol = aio.web.protocol
 	  port = 8080
 
-	  [web:test]
+	  [web/test]
 	  routes = GET / my.example.handler
 
 

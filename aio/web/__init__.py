@@ -46,7 +46,7 @@ def protocol(name):
     yield from setup_templates(webapp)
     yield from setup_static(webapp)
 
-    app_config = "web:%s" % name
+    app_config = "web/%s" % name
 
     try:
         conf = aio.app.config[app_config]

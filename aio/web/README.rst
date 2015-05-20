@@ -7,18 +7,18 @@ Configuration
 
 Let's create a config defining a factory method and using the aio.web.protocol for the protocol
 
-We can define routes for the web server in a corresponding [web:{name}] section
+We can define routes for the web server in a corresponding [web/{name}] section
 
   >>> web_server_config = """
   ... [aio]
   ... log_level: ERROR
   ... 
-  ... [server:test]
-  ... factory: aio.http.server
-  ... protocol: aio.web.protocol
+  ... [server/test]
+  ... factory = aio.http.server
+  ... protocol = aio.web.protocol
   ... port: 7070
   ... 
-  ... [web:test]
+  ... [web/test]
   ... routes: GET / aio.web.tests._example_handler
   ... """  
 
@@ -75,18 +75,18 @@ Let's clear the web apps
 Static directory
 ----------------
 
-The web: section takes a static_url and a static_dir option for hosting static files
+The "web/" section takes a static_url and a static_dir option for hosting static files
 
   >>> config_static = """
   ... [aio]
   ... log_level: ERROR
   ... 
-  ... [server:test]
+  ... [server/test]
   ... factory: aio.http.server
   ... protocol: aio.web.protocol
   ... port: 7070
   ... 
-  ... [web:test]
+  ... [web/test]
   ... static_url: /static
   ... static_dir: /tmp/test_static/  
   ... """
@@ -121,12 +121,12 @@ Add any modules containing templates to the [aio] modules option
   ... modules = aio.web.tests
   ... log_level: ERROR
   ... 
-  ... [server:test]
+  ... [server/test]
   ... factory: aio.http.server
   ... protocol: aio.web.protocol
   ... port: 7070
   ... 
-  ... [web:test]
+  ... [web/test]
   ... routes: GET / aio.web.tests._example_template_handler
   ... """
 

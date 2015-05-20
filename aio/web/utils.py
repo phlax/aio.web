@@ -11,7 +11,7 @@ log = logging.getLogger('aio.web')
 def _collectstatic():
 
     for s in app.config.sections():
-        if s.startswith("web:"):
+        if s.startswith("web/"):
             section = app.config[s]
             if 'static_dir' in section:
                 static_dir = os.path.abspath(section['static_dir'])
