@@ -5,7 +5,7 @@ import os
 import sys
 from setuptools import setup, find_packages
 
-version = "0.0.6"
+version = "0.0.7"
 
 install_requires = [
     'setuptools',
@@ -31,15 +31,6 @@ long_description = (
     + '\n'
     + read("README.rst")
     + '\n')
-
-try:
-    long_description += (
-        '\n'
-        + read("aio", "web", "README.rst")
-        + '\n')
-except FileNotFoundError:
-    pass
-
 
 setup(
     name='aio.web',
