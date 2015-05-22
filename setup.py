@@ -49,7 +49,6 @@ setup(
     url='http://github.com/phlax/aio.web',
     license='GPL',
     packages=find_packages(),
-    namespace_packages=['aio'],
     include_package_data=True,
     package_data={'': ['templates/*.html', '*.rst']},
     test_suite="aio.app.tests",
